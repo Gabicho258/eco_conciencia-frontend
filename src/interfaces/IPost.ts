@@ -1,10 +1,10 @@
-export const IPost = {
-  _id: String,
-  user_id: String,
-  title: String,
-  description: String,
-  photos_url: Array,
-  labels: Array,
-  district: String,
-  likes: Number,
-};
+export interface IPost {
+  _id: string;
+  user_id: string;
+  title: string;
+  description: string;
+  photos_url: string[];
+  labels: string[];
+  district: string;
+  likes: number;
+}

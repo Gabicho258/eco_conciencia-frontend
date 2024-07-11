@@ -1,6 +1,6 @@
-export const IComment = {
-  _id: String,
-  post_id: String,
-  user_id: String,
-  comment: String,
-};
+export interface IComment {
+  _id: string;
+  post_id: string;
+  user_id: string;
+  comment: string;
+}
