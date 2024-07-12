@@ -1,0 +1,95 @@
+@import './../../variables';
+
+.userProfile {
+  background-color: #fff;
+  color: black;
+  padding: 6rem 3rem 3rem 3rem;
+  min-height: 100vh;
+  font-family: $roboto-regular;
+  &__backBtn {
+    position: absolute;
+    top: 1.5rem;
+    left: 2rem;
+    &-icon {
+      font-size: 3rem;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  &__editBtn {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    &-icon {
+      font-size: 2.5rem;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  &__container {
+    &-grid {
+      display: grid;
+      grid-template-columns: 1fr 4fr;
+      margin: 0 2.5rem;
+      &-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        &-image {
+          border: 1px solid black;
+          width: 9rem;
+          height: 9rem;
+        }
+        &-name {
+          margin: 0.3rem 0;
+          font-size: 1.7rem;
+        }
+      }
+      &-right {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        &-label {
+          font-size: 2.5rem;
+          margin: 0;
+        }
+        &-counter {
+          font-size: 4rem;
+          margin: 0.3rem 0;
+          color: rgb(60, 60, 60);
+        }
+      }
+    }
+  }
+  &__postsTab {
+    margin: 0.5rem 2.5rem;
+
+    &-posts {
+      margin: 1.5rem 0;
+      &-title {
+        text-align: center;
+        background-color: #c1e2c0;
+        padding: 0.5rem;
+        border-radius: 5px 5px 0 0;
+      }
+      &-img {
+        object-fit: cover;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+      &-likes {
+        background-color: #c1e2c0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        border-radius: 0 0 5px 5px;
+        padding: 0.5rem;
+        gap: 0.3rem;
+      }
+    }
+  }
+}
