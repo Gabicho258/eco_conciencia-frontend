@@ -1,7 +1,8 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Login } from "./pages/Login/Login";
-import HubHome from "./pages/HubHome/HubHome";
+
+import { HubHome } from "./pages/HubHome/HubHome";
 
 function App() {
   return (
@@ -9,6 +10,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HubHome />} />
+
+          <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </>

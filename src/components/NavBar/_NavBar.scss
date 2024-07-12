@@ -1,0 +1,95 @@
+@import "../../variables.scss";
+
+.navBarContainer {
+    height: 10vh;
+    background-color: #C1E2C0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: .1rem 3rem .1rem 2rem;
+    border-bottom: 1px solid #00000086;
+
+    &__header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        &-icon {
+            width: 5rem;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        &-text {
+            padding: 0 0 0 .6rem;
+            font-family: $italianno-regular;
+            font-size: 4.5rem;
+            font-weight: 400;
+        }
+    }
+
+    &__profile {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        &-name {
+            color: #000;
+            font-size: 1.3rem;
+            margin-right: 1.5rem;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        &-image {
+            height: 3rem;
+            width: 3rem;
+            margin-right: 1rem;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
+    &__buttons {
+        display: flex;
+        flex-direction: row;
+
+        &-register {
+            font-family: $roboto-regular;
+            background-color: #000;
+            box-shadow: none;
+            margin: 0 1.5rem;
+            font-size: 1.2rem;
+            text-transform: none;
+            border-radius: 10px;
+            padding: .4rem 1.6rem;
+
+            &:hover {
+                background-color: #11130f;
+                // color: #000;
+            }
+        }
+
+        &-login {
+            font-family: $roboto-regular;
+            background-color: #F5F5F5;
+            text-transform: none;
+            color: #000;
+            box-shadow: none;
+            padding: .4rem 1.6rem;
+            font-size: 1.2rem;
+            border-radius: 10px;
+
+            &:hover {
+                background-color: #dde0dd;
+            }
+        }
+    }
+}
