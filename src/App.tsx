@@ -4,6 +4,7 @@ import { Login } from "./pages/Login/Login";
 
 import { HubHome } from "./pages/HubHome/HubHome";
 import HomePage from "./pages/HomePage/HomePage";
+import { Post } from "./pages/PostPage/Post";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
 
           <Route path="/login" element={<Login />} />
+          <Route path="/post/" element={<Post />} />
         </Routes>
       </BrowserRouter>
     </>
