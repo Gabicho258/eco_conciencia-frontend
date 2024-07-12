@@ -29,8 +29,191 @@
     }
 
     &__content {
+        background-color: #F5F5F5;
         margin-top: 1rem;
+        padding: 0rem 2rem;
         width: 80%;
         border: 1px solid #000;
+
+        &-title {
+            font-size: 2rem;
+            font-family: $roboto-bold;
+        }
+
+        &-author {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+
+            &-info {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 1rem;
+                // font-size: 1.5rem;
+                font-family: $roboto-regular;
+
+                &-avatar {
+                    width: 5rem;
+                    height: 5rem;
+                }
+
+
+            }
+
+            &-like {
+                &-icon {
+                    width: 3.2rem;
+                    height: 3.2rem;
+                }
+            }
+        }
+
+        &-postInfo {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: .6rem 1.2rem 0;
+            font-size: 1.1rem;
+
+            span {
+                padding-right: 1.5rem;
+                display: flex;
+                align-items: center;
+            }
+
+        }
+
+        &-images {
+            text-align: center;
+
+            &-image {
+                max-width: 100%;
+                max-height: 30rem;
+            }
+
+            &-tabs {
+                margin: 0 1.4rem;
+
+                &-tab {
+                    &-image {
+                        max-width: 7rem;
+
+                    }
+                }
+            }
+        }
+
+        &-description {
+            padding: 2.4rem 2rem;
+            font-size: 1.1rem;
+            font-family: $roboto-regular;
+            text-align: justify;
+        }
+
+        &-comments {
+            padding: 0rem 2rem;
+            font-size: 1.1rem;
+            font-family: $roboto-regular;
+            text-align: justify;
+            margin-top: 2rem;
+
+            &-header {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+
+
+                &-button {
+                    margin-top: .5rem;
+                    background-color: #6f856e;
+                    text-transform: none;
+                    font-size: 1rem;
+
+                    &:hover {
+                        background-color: #6d8472;
+                    }
+
+                    &:disabled {
+                        color: #ffffff;
+                        background-color: #b9b9b9;
+                    }
+                }
+            }
+
+            &-newComment {
+                width: 96%;
+
+                &-container {
+                    margin: 1.5rem 0;
+
+
+                    &-comment {
+                        font-family: $roboto-regular;
+                        width: 100%;
+                        border: 1px solid #000000;
+                        border-radius: 0.5rem;
+                        resize: none;
+                        background: none;
+                        outline: none;
+                        padding: .5rem 1rem;
+
+                        font-size: 1.2rem;
+                        color: #000;
+
+                        &::-webkit-scrollbar {
+                            width: 10px;
+                            height: 10px;
+                        }
+
+                        &::-webkit-scrollbar-button:start:decrement,
+                        ::-webkit-scrollbar-button:end:increment {
+                            height: 10px;
+                            background-color: transparent;
+                        }
+
+                        &::-webkit-scrollbar-track-piece {
+                            background-color: #eeeeee;
+                            -webkit-border-radius: 16px;
+                        }
+
+                        &::-webkit-scrollbar-thumb:vertical {
+                            height: 10px;
+                            background-color: #666;
+                            border: 1px solid #000000;
+                            -webkit-border-radius: 16px;
+                        }
+                    }
+
+                    &-btnSection {
+                        margin: 1rem 0 0rem;
+
+                        &-submit {
+                            background-color: #8daa94;
+                            color: #fff;
+                            margin-right: 1rem;
+
+                            &:disabled {
+                                background-color: #8daa94;
+                            }
+
+                            &:hover {
+                                background-color: #6d8472;
+                            }
+                        }
+
+                        &-cancel {
+                            background-color: #d12942;
+
+                            &:hover {
+                                background-color: #921e2f;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
