@@ -20,6 +20,15 @@ export const ecoCienciaApi = createApi({
         body: user,
       }),
     }),
+    loginUser: builder.mutation<{ token: string; user: IUser }, Partial<IUser>>(
+      {
+        query: (user) => ({
+          url: "/user/login",
+          method: "POST",
+          body: user,
+        }),
+      }
+    ),
     updateUser: builder.mutation<IUser, Partial<IUser>>({
       query: (user) => ({
         url: `/user/update/${user._id}`,
@@ -142,3 +151,24 @@ export const ecoCienciaApi = createApi({
     }),
   }),
 });
+
+export const {
+  useCreateCommentMutation,
+  useCreatePostMutation,
+  useCreateUserMutation,
+  useDeleteCommentMutation,
+  useDeletePostMutation,
+  useGetAllCommentsQuery,
+  useGetAllPostsQuery,
+  useGetAllUsersQuery,
+  useGetCommentByIdQuery,
+  useGetCommentsByPostIdQuery,
+  useGetCommentsByUserIdQuery,
+  useGetPostByIdQuery,
+  useGetPostsByUserIdQuery,
+  useUpdateCommentMutation,
+  useUpdatePostMutation,
+  useGetUserByIdQuery,
+  useUpdateUserMutation,
+  useLoginUserMutation,
+} = ecoCienciaApi;

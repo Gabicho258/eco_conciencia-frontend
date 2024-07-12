@@ -15,6 +15,7 @@ import BasicModal from "../modal/BasicModal";
 import "./_NavBar.scss";
 import image from "../../assets/icon_zoom.png";
 import { Login } from "../../pages/Login/Login";
+import { useGetUserByIdQuery } from "../../app/ecoCiencia.api";
 
 export const NavBar = () => {
   ///// Start modal content /////////////////////////
@@ -30,10 +31,11 @@ export const NavBar = () => {
   const handleCloseModal = () => setOpenModal(false);
   ///////////////// End modal content////////////////
 
-  //   const isUserAuthenticated = localStorage.getItem("data");
-  const isUserAuthenticated = false;
-  //   const userCredentials =
-  //     isUserAuthenticated && JSON.parse(isUserAuthenticated);
+  const userDataStorage = localStorage.getItem("user_data");
+  const userCredentials =
+    userDataStorage?.includes("_id") && JSON.parse(userDataStorage);
+  const { data } = useGetUserByIdQuery(userCredentials?._id);
+  let isUserAuthenticated = userDataStorage && !!data;
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -52,15 +54,9 @@ export const NavBar = () => {
   };
   const handleClickLogout = () => {
     localStorage.clear();
-    navigate("/homepage");
-  };
-  // console.log(isUserAuthenticated);
-  //   const { data } = useGetUserByIdQuery(userCredentials?.id);
-  const data = {
-    first_name: "qwerty",
-    last_name: "asdfg",
-    photo_url:
-      "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon&f=y",
+    isUserAuthenticated = false;
+
+    navigate("/");
   };
 
   return (
@@ -72,7 +68,7 @@ export const NavBar = () => {
             alt="image_profile"
             src={image}
             onClick={() => {
-              navigate("/homepage");
+              navigate("/home");
             }}
           ></img>
           <h1 className="navBarContainer__header-text">EcoConciencia</h1>
@@ -80,12 +76,10 @@ export const NavBar = () => {
         {isUserAuthenticated ? (
           <>
             <div className="navBarContainer__profile">
-              <div className="navBarContainer__profile-name">
-                {data?.first_name} {data?.last_name}
-              </div>
+              <div className="navBarContainer__profile-name">{data?.name}</div>
               <Avatar
                 className="navBarContainer__profile-image"
-                alt={data?.first_name}
+                alt={data?.name}
                 src={data?.photo_url}
                 onClick={handleClick}
               />
@@ -130,19 +124,9 @@ export const NavBar = () => {
                     handleClickProfile();
                   }}
                 >
-                  <Avatar src={data?.photo_url} /> {data?.first_name}
+                  <Avatar src={data?.photo_url} /> {data?.name}
                 </MenuItem>
                 <Divider />
-                {/* <MenuItem
-                  onClick={() => {
-                    navigate("/chat");
-                  }}
-                >
-                  <ListItemIcon>
-                    <ChatIcon fontSize="small" />
-                  </ListItemIcon>
-                  Chats
-                </MenuItem> */}
 
                 <MenuItem
                   onClick={() => {
