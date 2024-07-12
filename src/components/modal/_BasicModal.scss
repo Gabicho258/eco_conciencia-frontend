@@ -1,0 +1,12 @@
+.basic-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: rgb(236, 230, 230);
+  border: none;
+  box-shadow: 24px;
+  padding: 25px;
+  border-radius: 20px;
+}
