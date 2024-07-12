@@ -18,6 +18,13 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: "ItaliannoRegular";
+    src: url("./fonts/Italianno-Regular.ttf");
+    font-style: normal;
+}
+
 $roboto-light: "RobotoLight", sans-serif;
 $roboto-regular: "RobotoRegular", sans-serif;
 $roboto-bold: "RobotoBold", sans-serif;
+$italianno-regular: "ItaliannoRegular", sans-serif;

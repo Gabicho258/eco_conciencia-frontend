@@ -1,0 +1,45 @@
+@import "../../variables";
+
+.hubHomeContainer {
+    &__content {
+        background-image: url("../../assets/background-home.jpg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        padding: 4rem 8rem 10.5rem;
+
+        &-title {
+            font-size: 4rem;
+            width: 29rem;
+        }
+
+        &-subtitle {
+            font-family: $roboto-light;
+            font-size: 1.1rem;
+            width: 39rem;
+            line-height: 1.8rem;
+        }
+
+        &-button {
+            font-family: $roboto-regular;
+            background-color: #000;
+            box-shadow: none;
+            // margin: 0 1.5rem;
+            font-size: 1.2rem;
+            text-transform: none;
+            border-radius: 10px;
+            padding: .4rem 1.6rem;
+
+            &:hover {
+                background-color: #11130f;
+            }
+        }
+    }
+
+    &__footer {
+        border-top: 1px solid #00000086;
+        width: 100%;
+        height: 7.5vh;
+        background-color: #C1E2C0;
+    }
+}
