@@ -1,0 +1,43 @@
+@import "../../variables.scss";
+
+.comment {
+    color: #000;
+    // margin: 1rem 0;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #fff;
+    // height: 10vh;
+
+    &__header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        &-author {
+            margin: 0.3rem 0.5rem 0.3rem 0;
+            font-size: 1.1rem;
+
+            // &:hover {
+            //     cursor: pointer;
+            //     text-decoration: underline;
+            // }
+        }
+    }
+
+    &__commentContent {
+
+        // display: inline-block;
+        // margin: 0;
+        // padding: 0;
+        &-date {
+            font-family: $roboto-light;
+            font-size: 1rem;
+            margin: -.5rem 0.5rem 0.3rem 4rem;
+        }
+
+        &-text {
+
+            margin: 1rem 0.5rem 2rem 4rem;
+        }
+
+    }
+}
