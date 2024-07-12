@@ -1,0 +1,9 @@
+.homePage {
+  &__cards {
+    margin-inline: 30rem;
+    margin-top: 5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5rem;
+  }
+}

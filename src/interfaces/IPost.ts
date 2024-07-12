@@ -7,4 +7,6 @@ export interface IPost {
   labels: string[];
   district: string;
   likes: number;
+  createdAt: string;
+  updatedAt: string;
 }
