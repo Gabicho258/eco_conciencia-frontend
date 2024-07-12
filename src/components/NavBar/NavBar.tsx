@@ -5,16 +5,31 @@ import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Settings from "@mui/icons-material/Settings";
-// import ChatIcon from "@mui/icons-material/Chat";
 import Logout from "@mui/icons-material/Logout";
-import "./_NavBar.scss";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+import Register from "../../pages/Register/Register";
+import BasicModal from "../modal/BasicModal";
 // import { useGetUserByIdQuery } from "../../app/apis/compartiendoSabores.api";
+
+import "./_NavBar.scss";
 import image from "../../assets/icon_zoom.png";
+import { Login } from "../../pages/Login/Login";
 
 export const NavBar = () => {
+  ///// Start modal content /////////////////////////
+
+  const [openModal, setOpenModal] = useState(false);
+  const [modalContent, setModalContent] = useState<React.ReactNode>(null);
+
+  const handleOpenModal = (content: React.ReactNode) => {
+    setModalContent(content);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => setOpenModal(false);
+  ///////////////// End modal content////////////////
+
   //   const isUserAuthenticated = localStorage.getItem("data");
   const isUserAuthenticated = false;
   //   const userCredentials =
@@ -162,7 +177,7 @@ export const NavBar = () => {
                 className="navBarContainer__buttons-register"
                 variant="contained"
                 onClick={() => {
-                  navigate("/register");
+                  handleOpenModal(<Register />);
                 }}
               >
                 Regístrate
@@ -171,12 +186,17 @@ export const NavBar = () => {
                 className="navBarContainer__buttons-login"
                 variant="contained"
                 onClick={() => {
-                  navigate("/login");
+                  handleOpenModal(<Login />);
                 }}
               >
                 Ingresar
               </Button>
             </div>
+            <BasicModal
+              open={openModal}
+              handleClose={handleCloseModal}
+              content={modalContent}
+            />
           </>
         )}
       </div>

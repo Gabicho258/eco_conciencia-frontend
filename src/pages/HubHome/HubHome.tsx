@@ -1,11 +1,12 @@
-        /**
-        
-import { useState } from 'react';
-import { Login } from '../Login/Login';
-import Register from '../Register/Register';
-import BasicModal from '../../components/modal/BasicModal';
+import { useState } from "react";
+import Register from "../Register/Register";
+import BasicModal from "../../components/modal/BasicModal";
+import { NavBar } from "../../components/NavBar/NavBar";
+import { Button } from "@mui/material";
 
-export default function HubHome() {
+import "./_HubHome.scss";
+
+export const HubHome = () => {
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState<React.ReactNode>(null);
 
@@ -13,25 +14,8 @@ export default function HubHome() {
     setModalContent(content);
     setOpen(true);
   };
-
   const handleClose = () => setOpen(false);
 
-  return (
-    <>
-      <div>
-        <button onClick={() => handleOpen(<Login />)}>Iniciar sesión</button>
-        <button onClick={() => handleOpen(<Register />)}>Registrarse</button>
-      </div>
-      <BasicModal open={open} handleClose={handleClose} content={modalContent} />
-    </>
-  );
-}**/
-import { NavBar } from "../../components/NavBar/NavBar";
-import { Button } from "@mui/material";
-
-import "./_HubHome.scss";
-
-export const HubHome = () => {
   return (
     <>
       <NavBar />
@@ -48,9 +32,15 @@ export const HubHome = () => {
           <Button
             variant={"contained"}
             className="hubHomeContainer__content-button"
+            onClick={() => handleOpen(<Register />)}
           >
             Descubre nuevas historias
           </Button>
+          <BasicModal
+            open={open}
+            handleClose={handleClose}
+            content={modalContent}
+          />
         </div>
         <div className="hubHomeContainer__footer" />
       </div>
