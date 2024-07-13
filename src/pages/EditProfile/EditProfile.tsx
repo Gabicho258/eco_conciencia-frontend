@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useGetUserByIdQuery } from "../../app/ecoCiencia.api";
 
 export const EditProfile = () => {
+
   const userDataStorage = localStorage.getItem("user_data");
   const userCredentials =
     userDataStorage?.includes("_id") && JSON.parse(userDataStorage);

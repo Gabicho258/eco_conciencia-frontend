@@ -23,11 +23,14 @@ export const UserProfile = () => {
   );
   const { data: myPosts } = useGetPostsByUserIdQuery(user?._id || "");
 
+
+
   const navigate = useNavigate();
 
   return (
     <>
-      <div className="userProfile">
+      <div className='userProfile'>
+        <div className='userProfile__addPost'>Añadir publicación</div>
         <div className="userProfile__backBtn">
           <ArrowBackIcon
             className="userProfile__backBtn-icon"
