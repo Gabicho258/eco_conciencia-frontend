@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import { NavBar } from "../../components/NavBar/NavBar";
 import "./_PostFormPage.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -10,7 +10,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import ClearIcon from '@mui/icons-material/Clear';
+import ClearIcon from "@mui/icons-material/Clear";
 
 export const PostFormPage = () => {
   const {
@@ -24,7 +24,7 @@ export const PostFormPage = () => {
   const navigate = useNavigate();
 
   const [district, setDistrict] = useState("");
-  const [images, setImages] = useState([""]);
+  const [photosUrl, setPhotosUrl] = useState<string[]>([]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setDistrict(event.target.value);
@@ -64,7 +64,7 @@ export const PostFormPage = () => {
         /* llamada a la base de datos, rellenar los campos */
         setValue("title", post.title);
         setValue("description", post.description);
-        setImages(post.photos_url || []);
+        setPhotosUrl(post.photos_url || []);
       }
     }
 
@@ -107,6 +107,17 @@ export const PostFormPage = () => {
     "Yura",
   ];
 
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const newPhotos = files.map((file) => URL.createObjectURL(file));
+
+    setPhotosUrl((prevPhotos) => [...prevPhotos, ...newPhotos]);
+  };
+
+  const handleDeleteImage = (url: string) => {
+    setPhotosUrl(prevPhotosUrl => prevPhotosUrl.filter(photoUrl => photoUrl !== url));
+  }
+
   return (
     <>
       <NavBar />
@@ -131,24 +142,33 @@ export const PostFormPage = () => {
               </p>
             )}
 
-            {params.id && (
-              <div className="containerCreatePost__form-inputs-images">
-                <h4>Imágenes:</h4>
-                <div className="containerCreatePost__form-inputs-images-urls">
-                  {images.map((image) => (
-                    <a href={image} target="_blank" rel="noopener noreferrer" className="containerCreatePost__form-inputs-images-urls-url">
-                      Image
-                      {/* <button className="containerCreatePost__form-inputs-images-urls-url-button">Eliminar</button> */}
-                      <ClearIcon className="containerCreatePost__form-inputs-images-urls-url-button"/>
-                    </a>
-                  ))}
-                </div>
+            <div className="containerCreatePost__form-inputs-images">
+              <h4>Imágenes de mi post:</h4>
+              <div className="containerCreatePost__form-inputs-images-urls">
+                {photosUrl.map((url, index) => (
+                  <div className="containerCreatePost__form-inputs-images-urls-url">
+                  <a
+                    href={url}
+                    key={index}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    
+                  >
+                    Imagen {index + 1}
+                  </a>
+                    <button className="containerCreatePost__form-inputs-images-urls-url-button" type="button" onClick={() => handleDeleteImage(url)}>
+                      <ClearIcon />
+                    </button>
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
+
             <input
               type="file"
               className="containerCreatePost__form-inputs-image"
-              {...register("images")}
+              multiple
+              onChange={handleFileChange}
             />
 
             <textarea

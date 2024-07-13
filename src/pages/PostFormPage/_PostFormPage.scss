@@ -67,16 +67,15 @@
 
             &-button {
               border: none;
-              background-color: red;
-              color: white;
               padding: 2px;
               margin: 1px;
               border-radius: 5px;
             }
 
             &-button:hover {
-              background-color: rgb(252, 54, 54);
+              background-color: red; 
               cursor: pointer;
+              color: white;
             }
           }
         }
