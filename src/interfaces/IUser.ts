@@ -4,4 +4,5 @@ export interface IUser {
   email: string;
   password: string;
   photo_url: string;
+  likes: string[];
 }

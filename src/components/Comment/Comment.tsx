@@ -1,18 +1,18 @@
 import "./_Comment.scss";
 import { Avatar } from "@mui/material";
 import { IComment } from "../../interfaces";
+import {
+  useGetPostByIdQuery,
+  useGetUserByIdQuery,
+} from "../../app/ecoCiencia.api";
+import { useParams } from "react-router-dom";
 interface CommentProps {
   comment: Partial<IComment>;
 }
 export const Comment = ({ comment }: CommentProps) => {
-  const commentOwner = {
-    name: "My comentes",
-    photo_url:
-      "https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg",
-    _id: "668f4c20ae52b096d42231ed",
-    email: "myemail@gmail.com",
-    password: "mypassword",
-  };
+  const { id } = useParams();
+  const { data: commentOwner } = useGetUserByIdQuery(comment?.user_id || "");
+  const { data: post } = useGetPostByIdQuery(id || "");
   return (
     <div className="comment">
       <div className="comment__header">
@@ -23,8 +23,8 @@ export const Comment = ({ comment }: CommentProps) => {
         />
         <h4 className="comment__header-author" onClick={() => {}}>
           {commentOwner?.name}
+          {commentOwner?._id === post?.user_id && <span>Publicador</span>}
         </h4>
-        {/* <RatingStars readOnly darkTheme qualification={rating} /> */}
       </div>
       <p className="comment__commentContent-date">
         {new Date(comment.createdAt || "").toLocaleDateString("es-es", {

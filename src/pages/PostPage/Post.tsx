@@ -1,6 +1,6 @@
 import { NavBar } from "../../components/NavBar/NavBar";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import CommentIcon from "@mui/icons-material/Comment";
@@ -12,6 +12,15 @@ import AddIcon from "@mui/icons-material/Add";
 import "./_Post.scss";
 import { Comment } from "../../components/Comment/Comment";
 import { IComment } from "../../interfaces";
+import {
+  useCreateCommentMutation,
+  useDeletePostMutation,
+  useGetCommentsByPostIdQuery,
+  useGetPostByIdQuery,
+  useGetUserByIdQuery,
+  useUpdatePostMutation,
+  useUpdateUserMutation,
+} from "../../app/ecoCiencia.api";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -50,108 +59,67 @@ export const Post = () => {
   const [form, setForm] = useState<Partial<IComment>>({
     comment: "",
   });
+  const { id } = useParams();
+  const userDataStorage = localStorage.getItem("user_data");
+  const userCredentials =
+    userDataStorage?.includes("_id") && JSON.parse(userDataStorage);
+  const { data: user, refetch: refetchUser } = useGetUserByIdQuery(
+    userCredentials._id || ""
+  );
+  const { data: post, refetch: refetchPost } = useGetPostByIdQuery(id || "");
+  const { data: commentsPost, refetch: refetchComment } =
+    useGetCommentsByPostIdQuery(post?._id || "");
+  const { data: author } = useGetUserByIdQuery(post?.user_id || "");
+  const [updatePost] = useUpdatePostMutation();
+  const [createComment] = useCreateCommentMutation();
+  const [updateUser] = useUpdateUserMutation();
+  const [deletePost] = useDeletePostMutation();
   const handleSubmit = async () => {
-    // const comment = { ...form, user_id: userCredentials.id, recipe_id: id };
+    const comment = { ...form, user_id: userCredentials._id, post_id: id };
     try {
-      // await createComment(comment).unwrap();
-      // // actualizamos la calificación de la receta
-      // if (comments?.length === 0) {
-      //   await updateRecipe({
-      //     _id: id,
-      //     average_rating: comment.rating,
-      //   }).unwrap();
-      // } else {
-      //   await updateRecipe({
-      //     _id: id,
-      //     average_rating:
-      //       ((comment.rating || 0) + (recipe?.average_rating || 0)) / 2,
-      //   }).unwrap();
-      // }
+      await createComment(comment).unwrap();
+
       // // refetchComment
-      // setAddingComment(false);
-      // refetchComment();
+      setAddingComment(false);
+      refetchComment();
     } catch (error) {
       alert(JSON.stringify(error));
     }
   };
-  const mock = {
-    _id: "668f4ebeae52b096d4223200",
-    user_id: "668f4c20ae52b096d42231ed",
-    title: "Quema de Desechos en Yura",
-    description:
-      "El último fin de semana hubo un accidente en la avenida Progreso cerca de la planta de procesamiento de cementos y demas descripcion y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes, y demas cosas importantes,",
-    photos_url: [
-      "https://www.bbva.com/wp-content/uploads/2021/07/BBVA-contaminacio%CC%81n-ambiental-sostenibilidad.jpg",
-      "https://losenlacesdelavida.fundaciondescubre.es/files/2019/09/contaminacion-ambiental.jpg",
-    ],
-    labels: ["Label1", "Label2"],
-    district: "My district",
-    likes: 12,
-    createdAt: "2024-07-11T03:17:18.550Z",
-    updatedAt: "2024-07-11T03:17:18.550Z",
+  const handleDelete = async () => {
+    try {
+      await deletePost(post?._id || "").unwrap();
+      navigate(-1);
+    } catch (error) {
+      alert(JSON.stringify(error));
+    }
   };
-  const autor = {
-    name: "My name",
-    photo_url:
-      "https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg",
-    _id: "668f4c20ae52b096d42231ed",
-    email: "myemail@gmail.com",
-    password: "mypassword",
-  };
+  const handleLike = async () => {
+    const isLiked = user?.likes.includes(id || "");
+    try {
+      if (isLiked) {
+        // si es favorito, lo quitamos
+        await updateUser({
+          _id: userCredentials._id,
+          likes: user?.likes.filter((postLiked) => postLiked !== post?._id),
+        }).unwrap();
+        await updatePost({ _id: id, likes: (post?.likes || 0) - 1 }).unwrap();
+      } else {
+        // sino lo agregamos
+        await updateUser({
+          _id: userCredentials._id,
+          likes: [...(user?.likes || []), post?._id || ""],
+        }).unwrap();
+        await updatePost({ _id: id, likes: (post?.likes || 0) + 1 }).unwrap();
+      }
 
-  const commentsPost = [
-    {
-      post_id: "668f4f20ae52b096d4223206",
-      user_id: "668f4c5fae52b096d42231f3",
-      comment: "comment aeaeae",
-      createdAt: "2024-07-11T03:24:15.654Z",
-      updatedAt: "2024-07-11T03:24:15.654Z",
-    },
-    {
-      post_id: "668f4f20ae52b096d4223206",
-      user_id: "668f4c5fae52b096d42231f3",
-      comment: "comment aeaeae",
-      createdAt: "2024-07-11T03:24:15.654Z",
-      updatedAt: "2024-07-11T03:24:15.654Z",
-    },
-    {
-      post_id: "668f4f20ae52b096d4223206",
-      user_id: "668f4c5fae52b096d42231f3",
-      comment: "comment aeaeae",
-      createdAt: "2024-07-11T03:24:15.654Z",
-      updatedAt: "2024-07-11T03:24:15.654Z",
-    },
-    {
-      post_id: "668f4f20ae52b096d4223206",
-      user_id: "668f4c5fae52b096d42231f3",
-      comment: "comment aeaeae",
-      createdAt: "2024-07-11T03:24:15.654Z",
-      updatedAt: "2024-07-11T03:24:15.654Z",
-    },
-  ];
-  //   const handleLike = async () => {
-  //     const isFavorite = user?.favorites.includes(id || "");
-  //     try {
-  //       if (isFavorite) {
-  //         // si es favorito, lo quitamos
-  //         await updateUser({
-  //           _id: userCredentials.id,
-  //           favorites: user?.favorites.filter(
-  //             (favorite) => favorite !== recipe?._id
-  //           ),
-  //         }).unwrap();
-  //       } else {
-  //         // sino lo agregamos
-  //         await updateUser({
-  //           _id: userCredentials.id,
-  //           favorites: [...(user?.favorites || []), recipe?._id || ""],
-  //         }).unwrap();
-  //       }
-  //     } catch (error: any) {
-  //       alert(JSON.stringify(error.data));
-  //     }
-  //     // console.log(isFavorite);
-  //   };
+      await refetchPost();
+      await refetchUser();
+    } catch (error) {
+      alert(JSON.stringify(error));
+    }
+    // console.log(isLiked);
+  };
 
   return (
     <>
@@ -163,43 +131,89 @@ export const Post = () => {
           <div className="postContainer__back-text">Volver</div>
         </div>
         <div className="postContainer__content">
-          <h3 className="postContainer__content-title">{mock.title}</h3>
+          {post?.user_id === user?._id ? (
+            <div className="postContainer__content-container">
+              <h3 className="postContainer__content-title">{post?.title}</h3>
+              <div>
+                <Button
+                  className="postContainer__content-container-btn-edit"
+                  variant="contained"
+                  onClick={() => {
+                    navigate(`/edit-post/${post?._id}`);
+                  }}
+                >
+                  Editar
+                </Button>
+                <Button
+                  className="postContainer__content-container-btn-delete"
+                  variant="contained"
+                  onClick={handleDelete}
+                >
+                  Eliminar
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <h3 className="postContainer__content-title">{post?.title}</h3>
+          )}
+
           <div className="postContainer__content-author">
             <div className="postContainer__content-author-info">
               <Avatar
                 className="postContainer__content-author-info-avatar"
-                alt={autor?.name}
-                src={autor?.photo_url}
+                alt={author?.name}
+                src={author?.photo_url}
               />
               <div className="postContainer__content-author-info-data">
-                <p>{autor.name}</p>
+                <p>{author?.name}</p>
                 <p>
                   Publicado el:{"    "}
-                  {new Date(mock.createdAt).toLocaleDateString("es-es", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
+                  {"" +
+                    new Date(post?.createdAt || "").toLocaleDateString(
+                      "es-es",
+                      {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      }
+                    )}
                 </p>
               </div>
             </div>
             <div className="postContainer__content-author-like">
-              LIKE {/*codicional si dio like o no*/}
-              <ThumbUpAltIcon className="postContainer__content-author-like-icon" />
-              <ThumbUpOffAltIcon className="postContainer__content-author-like-icon" />
+              {/* LIKE codicional si dio like o no */}
+              {user?.likes.includes(id || "") ? (
+                <div className="postContainer__content-author-like-container">
+                  Me gusta{" "}
+                  {/* <FavoriteIcon className="recipe__container-favBtn-icon" /> */}
+                  <ThumbUpAltIcon
+                    onClick={handleLike}
+                    className="postContainer__content-author-like-icon"
+                  />
+                </div>
+              ) : (
+                <div className="postContainer__content-author-like-container">
+                  Dar me gusta{" "}
+                  {/* <FavoriteBorderIcon className="recipe__container-favBtn-icon" /> */}
+                  <ThumbUpOffAltIcon
+                    onClick={handleLike}
+                    className="postContainer__content-author-like-icon"
+                  />
+                </div>
+              )}
             </div>
           </div>
           <div className="postContainer__content-postInfo">
             <span>
-              <ThumbUpOffAltIcon /> {mock.likes}
+              <ThumbUpOffAltIcon /> {post?.likes}
             </span>
             <span>
-              <CommentIcon /> {commentsPost.length}
+              <CommentIcon /> {commentsPost?.length}
             </span>
           </div>
           <div className="postContainer__content-images">
             <Box sx={{ width: "100%" }}>
-              {mock?.photos_url.map((photo_url, index) => (
+              {post?.photos_url.map((photo_url, index) => (
                 <CustomTabPanel value={value} index={index} key={index}>
                   <img
                     className="postContainer__content-images-image"
@@ -219,7 +233,7 @@ export const Post = () => {
                   onChange={handleChange}
                   aria-label="basic tabs example"
                 >
-                  {mock?.photos_url.map((photo_url, index) => (
+                  {post?.photos_url.map((photo_url, index) => (
                     <Tab
                       className="postContainer__content-images-tabs-tab"
                       icon={
@@ -238,7 +252,7 @@ export const Post = () => {
             </Box>
           </div>
           <div className="postContainer__content-description">
-            {mock.description}
+            {post?.description}
           </div>
           <div className="postContainer__content-comments">
             <div className="postContainer__content-comments-header">
@@ -252,10 +266,10 @@ export const Post = () => {
                 onClick={() => {
                   setAddingComment(true);
                 }}
-                disabled={commentsPost?.some(
-                  (comment) => comment.user_id === "userCredentials.id"
-                  // (comment) => comment.user_id === "668f4c5fae52b096d42231f3"
-                )}
+                // disabled={commentsPost?.some(
+                //   (comment) => comment.user_id === "userCredentials.id"
+                //   // (comment) => comment.user_id === "668f4c5fae52b096d42231f3"
+                // )}
               >
                 {/* <AddIcon className="recipe__comments-header-addCommentBtn-icon" /> */}
                 <AddIcon className="postContainer__content-comments-header-button-icon" />
@@ -313,7 +327,7 @@ export const Post = () => {
                 </form>
               </FormControl>
             )}
-            {commentsPost.map((comment, index) => (
+            {commentsPost?.map((comment, index) => (
               <Comment comment={comment} key={index} />
             ))}
           </div>
