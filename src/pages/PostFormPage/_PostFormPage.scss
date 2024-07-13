@@ -23,13 +23,18 @@
       flex-direction: column;
       gap: 1rem;
       width: 55rem;
-      margin: 20px;
+      margin-top: 10px;
 
       &-title {
         width: 100%;
         padding: 15px;
         border: none;
         border-radius: 10px;
+        margin-left: 20px;
+      }
+
+      &-image {
+        margin-left: 20px;
       }
 
       &-description {
@@ -38,11 +43,27 @@
         padding: 15px;
         border: none;
         border-radius: 10px;
+        margin-left: 20px;
       }
 
       &-error {
         color: red;
         font-size: small;
+        margin-left: 20px;
+      }
+
+      &-categories {
+        margin-left: 20px;
+        &-body {
+          margin-left: 1rem;
+        }
+        &-header {
+        }
+      }
+
+      &-district {
+        margin-left: 15px;
+        width: 33%;
       }
     }
     &-bottom {

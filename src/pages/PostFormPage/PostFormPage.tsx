@@ -3,6 +3,13 @@ import { NavBar } from "../../components/NavBar/NavBar";
 import "./_PostFormPage.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 export const PostFormPage = () => {
   const {
@@ -14,6 +21,12 @@ export const PostFormPage = () => {
 
   const params = useParams();
   const navigate = useNavigate();
+
+  const [district, setDistrict] = React.useState("");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setDistrict(event.target.value);
+  };
 
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -44,6 +57,42 @@ export const PostFormPage = () => {
     loadPost();
   }, []);
 
+  /* categorias */
+  const categories = ["cat1", "cat2", "cat3"];
+
+  /* distritos */
+  const districts = [
+    "Alto Selva Alegre",
+    "Arequipa",
+    "Cayma",
+    "Cerro Colorado",
+    "Characato",
+    "Chiguata",
+    "Jacobo Hunter",
+    "José Luis Bustamante y Rivero",
+    "La Joya",
+    "Mariano Melgar",
+    "Miraflores",
+    "Mollebaya",
+    "Paucarpata",
+    "Pocsi",
+    "Polobaya",
+    "Quequeña",
+    "Sabandía",
+    "Sachaca",
+    "San Juan de Siguas",
+    "San Juan de Tarucani",
+    "Santa Isabel de Siguas",
+    "Santa Rita de Siguas",
+    "Socabaya",
+    "Tiabaya",
+    "Uchumayo",
+    "Vitor",
+    "Yanahuara",
+    "Yarabamba",
+    "Yura",
+  ];
+
   return (
     <>
       <NavBar />
@@ -60,11 +109,15 @@ export const PostFormPage = () => {
               type="text"
               placeholder="Título"
               className="containerCreatePost__form-inputs-title"
-              {...register("title", {required: true})}
+              {...register("title", { required: true })}
             />
-            {errors.title && <p className="containerCreatePost__form-inputs-error">El título es requerido</p>}
+            {errors.title && (
+              <p className="containerCreatePost__form-inputs-error">
+                El título es requerido
+              </p>
+            )}
 
-            <input type="file" {...register("image")} />
+            <input type="file" className="containerCreatePost__form-inputs-image" {...register("image")} />
 
             <textarea
               placeholder="Descripción de la Publicación"
@@ -72,7 +125,46 @@ export const PostFormPage = () => {
               className="containerCreatePost__form-inputs-description"
               {...register("description", { required: true })}
             ></textarea>
-            {errors.description && <p className="containerCreatePost__form-inputs-error">La descripción es requerida</p>}
+            {errors.description && (
+              <p className="containerCreatePost__form-inputs-error">
+                La descripción es requerida
+              </p>
+            )}
+
+            <FormGroup className="containerCreatePost__form-inputs-categories">
+              <p className="containerCreatePost__form-inputs-categories-header">
+                Seleccione las categorías a la que pertenece su publicación:
+              </p>
+              {categories.map((categorie) => (
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label={categorie}
+                  className="containerCreatePost__form-inputs-categories-body"
+                />
+              ))}
+            </FormGroup>
+
+            <FormControl
+              sx={{ m: 1, minWidth: 120 }}
+              size="small"
+              className="containerCreatePost__form-inputs-district"
+            >
+              <InputLabel id="demo-select-small-label">Distrito</InputLabel>
+              <Select
+                labelId="demo-select-small-label"
+                id="demo-select-small"
+                value={district}
+                label="District"
+                onChange={handleChange}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {districts.map((district) => (
+                  <MenuItem value={district}>{district}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </div>
           <div className="containerCreatePost__form-bottom">
             <Link
