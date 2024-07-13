@@ -14,6 +14,7 @@ import { Comment } from "../../components/Comment/Comment";
 import { IComment } from "../../interfaces";
 import {
   useCreateCommentMutation,
+  useDeletePostMutation,
   useGetCommentsByPostIdQuery,
   useGetPostByIdQuery,
   useGetUserByIdQuery,
@@ -72,6 +73,7 @@ export const Post = () => {
   const [updatePost] = useUpdatePostMutation();
   const [createComment] = useCreateCommentMutation();
   const [updateUser] = useUpdateUserMutation();
+  const [deletePost] = useDeletePostMutation();
   const handleSubmit = async () => {
     const comment = { ...form, user_id: userCredentials._id, post_id: id };
     try {
@@ -84,7 +86,14 @@ export const Post = () => {
       alert(JSON.stringify(error));
     }
   };
-
+  const handleDelete = async () => {
+    try {
+      await deletePost(post?._id || "").unwrap();
+      navigate(-1);
+    } catch (error) {
+      alert(JSON.stringify(error));
+    }
+  };
   const handleLike = async () => {
     const isLiked = user?.likes.includes(id || "");
     try {
@@ -122,7 +131,32 @@ export const Post = () => {
           <div className="postContainer__back-text">Volver</div>
         </div>
         <div className="postContainer__content">
-          <h3 className="postContainer__content-title">{post?.title}</h3>
+          {post?.user_id === user?._id ? (
+            <div className="postContainer__content-container">
+              <h3 className="postContainer__content-title">{post?.title}</h3>
+              <div>
+                <Button
+                  className="postContainer__content-container-btn-edit"
+                  variant="contained"
+                  onClick={() => {
+                    navigate(`/edit-post/${post?._id}`);
+                  }}
+                >
+                  Editar
+                </Button>
+                <Button
+                  className="postContainer__content-container-btn-delete"
+                  variant="contained"
+                  onClick={handleDelete}
+                >
+                  Eliminar
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <h3 className="postContainer__content-title">{post?.title}</h3>
+          )}
+
           <div className="postContainer__content-author">
             <div className="postContainer__content-author-info">
               <Avatar
