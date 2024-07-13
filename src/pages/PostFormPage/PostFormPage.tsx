@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NavBar } from "../../components/NavBar/NavBar";
 import "./_PostFormPage.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -10,6 +10,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import ClearIcon from '@mui/icons-material/Clear';
 
 export const PostFormPage = () => {
   const {
@@ -22,10 +23,20 @@ export const PostFormPage = () => {
   const params = useParams();
   const navigate = useNavigate();
 
-  const [district, setDistrict] = React.useState("");
+  const [district, setDistrict] = useState("");
+  const [images, setImages] = useState([""]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setDistrict(event.target.value);
+  };
+
+  /* post de prueba */
+  const post = {
+    title: "string",
+    description: "description",
+    photos_url: ["photo1", "photo2"],
+    labels: "",
+    district: "string",
   };
 
   const onSubmit = handleSubmit(async (values) => {
@@ -33,7 +44,7 @@ export const PostFormPage = () => {
       const res = {
         title: values.title,
         description: values.description,
-        photos_url: values.image[0],
+        photos_url: values.images,
       };
       if (params.id) {
         /* updatepost */
@@ -51,6 +62,9 @@ export const PostFormPage = () => {
     async function loadPost() {
       if (params.id) {
         /* llamada a la base de datos, rellenar los campos */
+        setValue("title", post.title);
+        setValue("description", post.description);
+        setImages(post.photos_url || []);
       }
     }
 
@@ -117,7 +131,25 @@ export const PostFormPage = () => {
               </p>
             )}
 
-            <input type="file" className="containerCreatePost__form-inputs-image" {...register("image")} />
+            {params.id && (
+              <div className="containerCreatePost__form-inputs-images">
+                <h4>Imágenes:</h4>
+                <div className="containerCreatePost__form-inputs-images-urls">
+                  {images.map((image) => (
+                    <a href={image} target="_blank" rel="noopener noreferrer" className="containerCreatePost__form-inputs-images-urls-url">
+                      Image
+                      {/* <button className="containerCreatePost__form-inputs-images-urls-url-button">Eliminar</button> */}
+                      <ClearIcon className="containerCreatePost__form-inputs-images-urls-url-button"/>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+            <input
+              type="file"
+              className="containerCreatePost__form-inputs-image"
+              {...register("images")}
+            />
 
             <textarea
               placeholder="Descripción de la Publicación"
@@ -131,7 +163,10 @@ export const PostFormPage = () => {
               </p>
             )}
 
-            <FormGroup className="containerCreatePost__form-inputs-categories">
+            <FormGroup
+              className="containerCreatePost__form-inputs-categories"
+              {...register("categories")}
+            >
               <p className="containerCreatePost__form-inputs-categories-header">
                 Seleccione las categorías a la que pertenece su publicación:
               </p>
@@ -148,6 +183,7 @@ export const PostFormPage = () => {
               sx={{ m: 1, minWidth: 120 }}
               size="small"
               className="containerCreatePost__form-inputs-district"
+              {...register("district")}
             >
               <InputLabel id="demo-select-small-label">Distrito</InputLabel>
               <Select
