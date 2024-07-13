@@ -3,4 +3,6 @@ export interface IComment {
   post_id: string;
   user_id: string;
   comment: string;
+  createdAt: string;
+  updatedAt: string;
 }

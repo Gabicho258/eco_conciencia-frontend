@@ -4,11 +4,14 @@ import { useNavigate } from "react-router-dom";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import CommentIcon from "@mui/icons-material/Comment";
-import { Avatar, Box, Tabs } from "@mui/material";
+import { Avatar, Box, Button, FormControl, Tabs } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import { useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
 
 import "./_Post.scss";
+import { Comment } from "../../components/Comment/Comment";
+import { IComment } from "../../interfaces";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -39,9 +42,37 @@ const a11yProps = (index: number) => {
 export const Post = () => {
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
-
+  const [addingComment, setAddingComment] = useState(false);
+  const isLoading = false;
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+  const [form, setForm] = useState<Partial<IComment>>({
+    comment: "",
+  });
+  const handleSubmit = async () => {
+    // const comment = { ...form, user_id: userCredentials.id, recipe_id: id };
+    try {
+      // await createComment(comment).unwrap();
+      // // actualizamos la calificación de la receta
+      // if (comments?.length === 0) {
+      //   await updateRecipe({
+      //     _id: id,
+      //     average_rating: comment.rating,
+      //   }).unwrap();
+      // } else {
+      //   await updateRecipe({
+      //     _id: id,
+      //     average_rating:
+      //       ((comment.rating || 0) + (recipe?.average_rating || 0)) / 2,
+      //   }).unwrap();
+      // }
+      // // refetchComment
+      // setAddingComment(false);
+      // refetchComment();
+    } catch (error) {
+      alert(JSON.stringify(error));
+    }
   };
   const mock = {
     _id: "668f4ebeae52b096d4223200",
@@ -73,21 +104,29 @@ export const Post = () => {
       post_id: "668f4f20ae52b096d4223206",
       user_id: "668f4c5fae52b096d42231f3",
       comment: "comment aeaeae",
+      createdAt: "2024-07-11T03:24:15.654Z",
+      updatedAt: "2024-07-11T03:24:15.654Z",
     },
     {
       post_id: "668f4f20ae52b096d4223206",
       user_id: "668f4c5fae52b096d42231f3",
       comment: "comment aeaeae",
+      createdAt: "2024-07-11T03:24:15.654Z",
+      updatedAt: "2024-07-11T03:24:15.654Z",
     },
     {
       post_id: "668f4f20ae52b096d4223206",
       user_id: "668f4c5fae52b096d42231f3",
       comment: "comment aeaeae",
+      createdAt: "2024-07-11T03:24:15.654Z",
+      updatedAt: "2024-07-11T03:24:15.654Z",
     },
     {
       post_id: "668f4f20ae52b096d4223206",
       user_id: "668f4c5fae52b096d42231f3",
       comment: "comment aeaeae",
+      createdAt: "2024-07-11T03:24:15.654Z",
+      updatedAt: "2024-07-11T03:24:15.654Z",
     },
   ];
   //   const handleLike = async () => {
@@ -135,7 +174,7 @@ export const Post = () => {
               <div className="postContainer__content-author-info-data">
                 <p>{autor.name}</p>
                 <p>
-                  Publicado el:{" "}
+                  Publicado el:{"    "}
                   {new Date(mock.createdAt).toLocaleDateString("es-es", {
                     year: "numeric",
                     month: "short",
@@ -146,24 +185,34 @@ export const Post = () => {
             </div>
             <div className="postContainer__content-author-like">
               LIKE {/*codicional si dio like o no*/}
-              <ThumbUpAltIcon />
-              <ThumbUpOffAltIcon />
+              <ThumbUpAltIcon className="postContainer__content-author-like-icon" />
+              <ThumbUpOffAltIcon className="postContainer__content-author-like-icon" />
             </div>
           </div>
           <div className="postContainer__content-postInfo">
-            <ThumbUpOffAltIcon /> {mock.likes}
-            <CommentIcon /> {commentsPost.length}
+            <span>
+              <ThumbUpOffAltIcon /> {mock.likes}
+            </span>
+            <span>
+              <CommentIcon /> {commentsPost.length}
+            </span>
           </div>
           <div className="postContainer__content-images">
             <Box sx={{ width: "100%" }}>
               {mock?.photos_url.map((photo_url, index) => (
-                <CustomTabPanel value={value} index={index}>
-                  <img src={photo_url} alt={`Post photo ${index}`} />
+                <CustomTabPanel value={value} index={index} key={index}>
+                  <img
+                    className="postContainer__content-images-image"
+                    src={photo_url}
+                    alt={`Post photo ${index}`}
+                    key={index}
+                  />
                 </CustomTabPanel>
               ))}
 
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <Tabs
+                  className="postContainer__content-images-tabs"
                   variant="scrollable"
                   scrollButtons="auto"
                   value={value}
@@ -172,8 +221,16 @@ export const Post = () => {
                 >
                   {mock?.photos_url.map((photo_url, index) => (
                     <Tab
-                      icon={<img src={photo_url} alt={`Post photo ${index}`} />}
+                      className="postContainer__content-images-tabs-tab"
+                      icon={
+                        <img
+                          className="postContainer__content-images-tabs-tab-image"
+                          src={photo_url}
+                          alt={`Post photo ${index}`}
+                        />
+                      }
                       {...a11yProps(index)}
+                      key={index}
                     />
                   ))}
                 </Tabs>
@@ -183,8 +240,83 @@ export const Post = () => {
           <div className="postContainer__content-description">
             {mock.description}
           </div>
-          <div className="postContainer__content-divider" />
-          <div className="postContainer__content-comments"></div>
+          <div className="postContainer__content-comments">
+            <div className="postContainer__content-comments-header">
+              <h4 className="postContainer__content-comments-header-title">
+                Comentarios
+              </h4>
+              <Button
+                // className="recipe__comments-header-addCommentBtn"
+                className="postContainer__content-comments-header-button"
+                variant="contained"
+                onClick={() => {
+                  setAddingComment(true);
+                }}
+                disabled={commentsPost?.some(
+                  (comment) => comment.user_id === "userCredentials.id"
+                  // (comment) => comment.user_id === "668f4c5fae52b096d42231f3"
+                )}
+              >
+                {/* <AddIcon className="recipe__comments-header-addCommentBtn-icon" /> */}
+                <AddIcon className="postContainer__content-comments-header-button-icon" />
+                Añadir comentario
+              </Button>
+            </div>
+            {addingComment && (
+              // <FormControl className="recipe__comments-newComment">
+              <FormControl className="postContainer__content-comments-newComment">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    // handleSubmit(e);
+                  }}
+                >
+                  <Box className="postContainer__content-comments-newComment-container">
+                    <textarea
+                      className="postContainer__content-comments-newComment-container-comment"
+                      required
+                      placeholder="Escribe un comentario..."
+                      rows={4}
+                      value={form.comment}
+                      onChange={({ target }) => {
+                        setForm({
+                          ...form,
+                          comment: target.value,
+                        });
+                      }}
+                    ></textarea>
+                    <div className="postContainer__content-comments-newComment-container-btnSection">
+                      <Button
+                        type="submit"
+                        color="success"
+                        variant="contained"
+                        className="postContainer__content-comments-newComment-container-btnSection-submit"
+                        onClick={handleSubmit}
+                        disabled={form.comment?.length === 0 || isLoading}
+                      >
+                        Guardar cambios
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="contained"
+                        className="postContainer__content-comments-newComment-container-btnSection-cancel"
+                        disabled={isLoading}
+                        onClick={() => {
+                          setAddingComment(false);
+                          form.comment = "";
+                        }}
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
+                  </Box>
+                </form>
+              </FormControl>
+            )}
+            {commentsPost.map((comment, index) => (
+              <Comment comment={comment} key={index} />
+            ))}
+          </div>
         </div>
       </div>
     </>
