@@ -14,7 +14,7 @@ export const EditProfile = () => {
     email: 'juan.perez@example.com',
     password: 'segura1234',
     photo_url:
-      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+      'https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1720828800&semt=ais_user',
   };
 
   const navigate = useNavigate();

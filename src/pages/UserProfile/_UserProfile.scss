@@ -4,8 +4,25 @@
   background-color: #fff;
   color: black;
   padding: 6rem 3rem 3rem 3rem;
+  box-sizing: border-box;
   min-height: 100vh;
   font-family: $roboto-regular;
+  &__addPost {
+    position: fixed;
+    background-color: #c1e2c0;
+    border-radius: 50px;
+    bottom: 3rem;
+    right: 2rem;
+    padding: 1rem 2rem;
+    font-family: $roboto-bold;
+    font-size: 1.5rem;
+    z-index: 1;
+    border: 1px solid black;
+    &:hover {
+      cursor: pointer;
+      background-color: #a5c1a4;
+    }
+  }
   &__backBtn {
     position: absolute;
     top: 1.5rem;
