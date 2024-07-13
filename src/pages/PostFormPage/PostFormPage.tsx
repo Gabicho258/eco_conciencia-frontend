@@ -11,6 +11,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ClearIcon from "@mui/icons-material/Clear";
+import { CloudDone } from "@mui/icons-material";
+import { categories, districts } from "../../utils/constants";
 
 export const PostFormPage = () => {
   const {
@@ -25,6 +27,7 @@ export const PostFormPage = () => {
 
   const [district, setDistrict] = useState("");
   const [photosUrl, setPhotosUrl] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setDistrict(event.target.value);
@@ -35,21 +38,26 @@ export const PostFormPage = () => {
     title: "string",
     description: "description",
     photos_url: ["photo1", "photo2"],
-    labels: "",
-    district: "string",
+    labels: ["Categoría 1", "cat2"],
+    district: "Cayma",
   };
 
   const onSubmit = handleSubmit(async (values) => {
     try {
       const res = {
+        /* falta el id del usuario */
         title: values.title,
         description: values.description,
-        photos_url: values.images,
+        photos_url: photosUrl,
+        labels: selectedCategories,
+        district: district
       };
       if (params.id) {
         /* updatepost */
       } else {
         /* createpost */
+        /* const createdPost = await createPost(res) */
+        /* console.log(createdPost) */
       }
 
       navigate("/home");
@@ -61,51 +69,18 @@ export const PostFormPage = () => {
   useEffect(() => {
     async function loadPost() {
       if (params.id) {
-        /* llamada a la base de datos, rellenar los campos */
+        /* llamada a la base de datos, reemplazar post por el post obtenido de la llamada */
         setValue("title", post.title);
         setValue("description", post.description);
         setPhotosUrl(post.photos_url || []);
+        setSelectedCategories(post.labels || []);
+        console.log(selectedCategories);
+        setDistrict(post.district);
       }
     }
 
     loadPost();
   }, []);
-
-  /* categorias */
-  const categories = ["cat1", "cat2", "cat3"];
-
-  /* distritos */
-  const districts = [
-    "Alto Selva Alegre",
-    "Arequipa",
-    "Cayma",
-    "Cerro Colorado",
-    "Characato",
-    "Chiguata",
-    "Jacobo Hunter",
-    "José Luis Bustamante y Rivero",
-    "La Joya",
-    "Mariano Melgar",
-    "Miraflores",
-    "Mollebaya",
-    "Paucarpata",
-    "Pocsi",
-    "Polobaya",
-    "Quequeña",
-    "Sabandía",
-    "Sachaca",
-    "San Juan de Siguas",
-    "San Juan de Tarucani",
-    "Santa Isabel de Siguas",
-    "Santa Rita de Siguas",
-    "Socabaya",
-    "Tiabaya",
-    "Uchumayo",
-    "Vitor",
-    "Yanahuara",
-    "Yarabamba",
-    "Yura",
-  ];
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -115,8 +90,18 @@ export const PostFormPage = () => {
   };
 
   const handleDeleteImage = (url: string) => {
-    setPhotosUrl(prevPhotosUrl => prevPhotosUrl.filter(photoUrl => photoUrl !== url));
-  }
+    setPhotosUrl((prevPhotosUrl) =>
+      prevPhotosUrl.filter((photoUrl) => photoUrl !== url)
+    );
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategories(prevSelectedCategories =>
+      prevSelectedCategories.includes(category)
+        ? prevSelectedCategories.filter(cat => cat !== category)
+        : [...prevSelectedCategories, category]
+    );
+  };
 
   return (
     <>
@@ -147,16 +132,19 @@ export const PostFormPage = () => {
               <div className="containerCreatePost__form-inputs-images-urls">
                 {photosUrl.map((url, index) => (
                   <div className="containerCreatePost__form-inputs-images-urls-url">
-                  <a
-                    href={url}
-                    key={index}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    
-                  >
-                    Imagen {index + 1}
-                  </a>
-                    <button className="containerCreatePost__form-inputs-images-urls-url-button" type="button" onClick={() => handleDeleteImage(url)}>
+                    <a
+                      href={url}
+                      key={index}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Imagen {index + 1}
+                    </a>
+                    <button
+                      className="containerCreatePost__form-inputs-images-urls-url-button"
+                      type="button"
+                      onClick={() => handleDeleteImage(url)}
+                    >
                       <ClearIcon />
                     </button>
                   </div>
@@ -190,10 +178,15 @@ export const PostFormPage = () => {
               <p className="containerCreatePost__form-inputs-categories-header">
                 Seleccione las categorías a la que pertenece su publicación:
               </p>
-              {categories.map((categorie) => (
+              {categories.map((category) => (
                 <FormControlLabel
-                  control={<Checkbox />}
-                  label={categorie}
+                  control={
+                    <Checkbox
+                      checked={selectedCategories.includes(category)}
+                      onChange={() => handleCategoryChange(category)}
+                    />
+                  }
+                  label={category}
                   className="containerCreatePost__form-inputs-categories-body"
                 />
               ))}
