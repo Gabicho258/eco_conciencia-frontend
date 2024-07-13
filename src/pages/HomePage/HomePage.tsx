@@ -1,69 +1,57 @@
-import { IPost } from "../../interfaces";
 import PostCard from "../../components/PostCard/PostCard";
 import { NavBar } from "../../components/NavBar/NavBar";
-import './_HomePage.scss'
+import "./_HomePage.scss";
+import { useGetAllPostsQuery } from "../../app/ecoCiencia.api";
+import { Box, Tab, Tabs } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useSearch } from "../../hooks/useSearch";
+import { SearchBar } from "../../components/SearchBar/SearchBar";
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 export default function HomePage() {
-  const posts = [
-    {
-      _id: "12345",
-      user_id: "01",
-      title: "Title",
-      description: "string",
-      photos_url: ["https://media.istockphoto.com/id/523382423/es/foto/problemas-medioambientales.jpg?s=612x612&w=0&k=20&c=1ic-c9OMY_f3QT4toSbziwqrfEu8zU-ICRF8Xiev02g="],
-      labels: ["cat1", "cat2"],
-      district: "string",
-      likes: 10,
-      createdAt: "string",
-      updatedAt: "string",
-    },
-    {
-      _id: "12345",
-      user_id: "02",
-      title: "Title2",
-      description: "string",
-      photos_url: ["https://img.freepik.com/vector-gratis/ilustracion-contaminaciones-tierra_1308-39766.jpg"],
-      labels: ["cat1", "cat2"],
-      district: "string",
-      likes: 20,
-      createdAt: "string",
-      updatedAt: "string",
-    },
-    {
-      _id: "12345",
-      user_id: "02",
-      title: "Title2",
-      description: "string",
-      photos_url: ["https://concepto.de/wp-content/uploads/2021/04/contaminacion-ambiental-e1618532000745.jpg", "456"],
-      labels: ["cat1", "cat2"],
-      district: "string",
-      likes: 20,
-      createdAt: "string",
-      updatedAt: "string",
-    },
-    {
-      _id: "12345",
-      user_id: "02",
-      title: "Title2",
-      description: "string",
-      photos_url: ["123", "456"],
-      labels: ["cat1", "cat2"],
-      district: "string",
-      likes: 20,
-      createdAt: "string",
-      updatedAt: "string",
-    },
-  ];
+  const categories = ["Todas", "Categoria1", "Categoria2", "Categoria3"];
+  const { data: posts, refetch: refetchPosts } = useGetAllPostsQuery();
+  const [value, setValue] = useState(0);
 
+  const resultByCategory =
+    value === 0
+      ? posts
+      : posts?.filter((post) => post.labels.includes(categories[value]));
+  const { text, result, onChangeInput } = useSearch({ data: resultByCategory });
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+  useEffect(() => {
+    refetchPosts();
+  }, []);
   return (
     <>
-      < NavBar />
+      <NavBar />
       <div className="homePage">
         <div className="homePage__categories">
-          {/* categorias a mostrar*/}
+          <Box sx={{ width: "80%" }}>
+            {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}> */}
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+            >
+              {categories?.map((category, index) => (
+                <Tab label={category} {...a11yProps(index)} key={index} />
+              ))}
+            </Tabs>
+            {/* </Box> */}
+          </Box>
+          <SearchBar text={text} onChangeInput={onChangeInput} />
         </div>
         <div className="homePage__cards">
-          {posts.map((post) => (
+          {result?.map((post) => (
             <PostCard post={post} key={post._id} />
           ))}
         </div>
