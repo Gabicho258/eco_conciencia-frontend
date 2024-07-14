@@ -45,6 +45,7 @@
       }
     }
   }
+
   &__buttonForm {
     padding: 12px;
     background-color: black;
@@ -52,21 +53,26 @@
     border-radius: 10px;
     width: 14rem;
     margin-top: 2rem;
-    
+
+    &:hover {
+      cursor: pointer;
+      background-color: rgb(26, 26, 26);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      background-color: #5f5959;
+      color: #ddd4d4;
+    }
   }
 
-  &__buttonForm:hover {
-    cursor: pointer;
-    background-color: rgb(26, 26, 26);
-  }
+
 
   &__help {
     font-size: small;
+
     :hover {
-      text-decoration-line: underline;  
+      text-decoration-line: underline;
     }
   }
 }
-
-
-

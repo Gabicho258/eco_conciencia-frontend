@@ -1,8 +1,38 @@
+import { Alert, Snackbar, SnackbarOrigin } from "@mui/material";
 import { useLoginUserMutation } from "../../app/ecoCiencia.api";
 import "./_Login.scss";
+import { useState } from "react";
+
+interface State extends SnackbarOrigin {
+  open: boolean;
+  message: string;
+}
+
 export const Login = () => {
   // const navigate = useNavigate();
-  const [loginUser] = useLoginUserMutation();
+  const [loginUser, { isLoading: isLoginLoading }] = useLoginUserMutation();
+  // notification
+  const [state, setState] = useState<State>({
+    open: false,
+    vertical: "top",
+    horizontal: "right",
+    message: "Error al iniciar sesión con Google",
+  });
+  const { vertical, horizontal, open } = state;
+  const handleClick = (newState: SnackbarOrigin, message: string) => {
+    setState({ ...newState, open: true, message });
+  };
+
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setState({ ...state, open: false });
+  };
+  ///////////
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -27,36 +57,63 @@ export const Login = () => {
       );
       window.location.href = "/home";
     } catch (error) {
-      alert(JSON.stringify(error));
+      handleClick(
+        { vertical: "top", horizontal: "right" },
+        "Correo o contraseña inválida"
+      );
+      // alert(JSON.stringify(error));
     }
   };
   return (
-    <div className="containerLogin">
-      <h2>Ingresa a EcoConciencia</h2>
-      <form
-        className="containerLogin__form"
-        onSubmit={(event) => handleSubmit(event)}
+    <>
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        key={vertical + horizontal}
+        open={open}
+        autoHideDuration={5000}
+        onClose={handleClose}
       >
-        <div className="containerLogin__form-email">
-          <label>Correo</label>
-          <input
-            name="email"
-            type="email"
-            className="containerLogin__form-email-input"
-            placeholder="example@example.com"
-            autoComplete="off"
-          />
-        </div>
-        <div className="containerLogin__form-password">
-          <label>Contraseña</label>
-          <input
-            name="password"
-            type="password"
-            className="containerLogin__form-password-input"
-          />
-        </div>
-        <button className="containerLogin__buttonForm">Siguiente</button>
-      </form>
-    </div>
+        <Alert
+          onClose={handleClose}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {state.message}
+        </Alert>
+      </Snackbar>
+      <div className="containerLogin">
+        <h2>Ingresa a EcoConciencia</h2>
+        <form
+          className="containerLogin__form"
+          onSubmit={(event) => handleSubmit(event)}
+        >
+          <div className="containerLogin__form-email">
+            <label>Correo</label>
+            <input
+              name="email"
+              type="email"
+              className="containerLogin__form-email-input"
+              placeholder="example@example.com"
+              autoComplete="off"
+            />
+          </div>
+          <div className="containerLogin__form-password">
+            <label>Contraseña</label>
+            <input
+              name="password"
+              type="password"
+              className="containerLogin__form-password-input"
+            />
+          </div>
+          <button
+            className="containerLogin__buttonForm"
+            disabled={isLoginLoading}
+          >
+            Siguiente
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
