@@ -4,7 +4,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import CommentIcon from "@mui/icons-material/Comment";
-import { Avatar, Box, Button, FormControl, Tabs } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  FormControl,
+  Stack,
+  Tabs,
+} from "@mui/material";
 import Tab from "@mui/material/Tab";
 import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
@@ -254,6 +262,20 @@ export const Post = () => {
           <div className="postContainer__content-description">
             {post?.description}
           </div>
+          <Stack
+            direction="row"
+            spacing={1}
+            className="postContainer__content-categories"
+          >
+            {post?.labels.map((category) => (
+              <Chip label={category} variant="outlined" key={category} />
+            ))}
+            <Chip
+              label={post?.district}
+              variant="outlined"
+              key={post?.district}
+            />
+          </Stack>
           <div className="postContainer__content-comments">
             <div className="postContainer__content-comments-header">
               <h4 className="postContainer__content-comments-header-title">
@@ -327,9 +349,13 @@ export const Post = () => {
                 </form>
               </FormControl>
             )}
-            {commentsPost?.map((comment, index) => (
-              <Comment comment={comment} key={index} />
-            ))}
+            {commentsPost?.length !== 0 ? (
+              commentsPost?.map((comment, index) => (
+                <Comment comment={comment} key={index} />
+              ))
+            ) : (
+              <h3 style={{ paddingBottom: "5rem" }}>No hay comentarios</h3>
+            )}
           </div>
         </div>
       </div>
