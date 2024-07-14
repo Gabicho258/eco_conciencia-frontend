@@ -23,14 +23,17 @@ export const UserProfile = () => {
   );
   const { data: myPosts } = useGetPostsByUserIdQuery(user?._id || "");
 
-
-
   const navigate = useNavigate();
 
   return (
     <>
-      <div className='userProfile'>
-        <div className='userProfile__addPost'>Añadir publicación</div>
+      <div className="userProfile">
+        <div
+          className="userProfile__addPost"
+          onClick={() => navigate("/add-post")}
+        >
+          Añadir publicación
+        </div>
         <div className="userProfile__backBtn">
           <ArrowBackIcon
             className="userProfile__backBtn-icon"
@@ -75,7 +78,7 @@ export const UserProfile = () => {
         <div className="userProfile__postsTab">
           <div className="userProfile__postsTab-posts">
             <ImageList gap={15} cols={5}>
-              {myPosts ? (
+              {myPosts?.length ? (
                 myPosts?.map((item) => (
                   <ImageListItem
                     key={item._id}

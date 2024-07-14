@@ -1,8 +1,7 @@
-import { useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "../../app/ecoCiencia.api";
 import "./_Login.scss";
 export const Login = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [loginUser] = useLoginUserMutation();
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
@@ -26,7 +25,7 @@ export const Login = () => {
           token: userLoggedIn.token,
         })
       );
-      navigate("/home");
+      window.location.href = "/home";
     } catch (error) {
       alert(JSON.stringify(error));
     }
@@ -58,9 +57,6 @@ export const Login = () => {
         </div>
         <button className="containerLogin__buttonForm">Siguiente</button>
       </form>
-      <p className="containerLogin__help">
-        ¿No tienes cuenta? <a href="">Regístrate</a>
-      </p>
     </div>
   );
 };

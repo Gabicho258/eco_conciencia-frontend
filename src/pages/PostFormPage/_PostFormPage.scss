@@ -36,6 +36,14 @@
 
       &-image {
         margin-inline: 20px;
+        background-color: #667a48;
+        font-family: $roboto-bold;
+
+        &:hover {
+          background-color: #404d2c;
+        }
+
+        // width: 2rem;
       }
 
       &-description {
@@ -60,10 +68,21 @@
         &-urls {
           display: flex;
           flex-direction: column;
+
           &-url {
             display: flex;
             justify-content: space-between;
             width: 100%;
+            margin-bottom: 1rem;
+
+            &-image {
+              width: 10rem;
+            }
+
+            a:hover {
+              text-decoration: underline;
+
+            }
 
             &-button {
               border: none;
@@ -73,7 +92,7 @@
             }
 
             &-button:hover {
-              background-color: red; 
+              background-color: red;
               cursor: pointer;
               color: white;
             }
@@ -83,11 +102,12 @@
 
       &-categories {
         margin-left: 20px;
+
         &-body {
           margin-left: 1rem;
         }
-        &-header {
-        }
+
+        &-header {}
       }
 
       &-district {
@@ -95,6 +115,7 @@
         width: 33%;
       }
     }
+
     &-bottom {
       display: flex;
       justify-content: end;
@@ -110,6 +131,7 @@
         color: #fff;
         color: grey;
       }
+
       &-buttonCancel:hover {
         background-color: rgb(221, 221, 221);
       }
@@ -123,6 +145,7 @@
         color: #fff;
         color: black;
       }
+
       &-buttonCreate:hover {
         background-color: #a6dd54;
       }

@@ -27,8 +27,10 @@ export const EditProfile = () => {
     let state = "";
     let URL = "";
     // hacemos un casteo para evitar errores
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).cloudinary.openUploadWidget(
       cloudinaryService("eco_conciencia"),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (err: any, result: any) => {
         if (!err && result && result.event === "success") {
           state = "success";

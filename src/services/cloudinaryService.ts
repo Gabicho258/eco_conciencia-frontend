@@ -5,18 +5,19 @@ export const cloudinaryService = (upload_preset: string) => {
     sources: ["local"],
     showAdvancedOptions: false,
     defaultSource: "local",
+    // #71a535
     styles: {
       palette: {
-        window: "#F47E68",
+        window: "#71a535",
         sourceBg: "#FFFFFF",
-        windowBorder: "#F47E68",
+        windowBorder: "#71a535",
         tabIcon: "#FFFFFF",
         inactiveTabIcon: "#FFDB92",
         menuIcons: "#FFFFFF",
-        link: "#F47E68",
+        link: "#71a535",
         action: "#FF2929",
         inProgress: "#000000",
-        complete: "#F47E68",
+        complete: "#71a535",
         error: "#c43737",
         textDark: "#000000",
         textLight: "#FFFFFF",
