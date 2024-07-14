@@ -198,7 +198,7 @@ export const PostFormPage = () => {
               <p className="containerCreatePost__form-inputs-categories-header">
                 Seleccione las categorías a la que pertenece su publicación:
               </p>
-              {categories.map((category, index) => (
+              {categories.slice(1).map((category, index) => (
                 <FormControlLabel
                   key={index}
                   control={
