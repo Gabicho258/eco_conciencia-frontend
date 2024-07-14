@@ -24,7 +24,7 @@ export default function HomePage() {
       ? posts
       : posts?.filter((post) => post.labels.includes(categories[value]));
   const { text, result, onChangeInput } = useSearch({ data: resultByCategory });
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   useEffect(() => {

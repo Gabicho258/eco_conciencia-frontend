@@ -61,7 +61,7 @@ export const Post = () => {
   const [value, setValue] = useState(0);
   const [addingComment, setAddingComment] = useState(false);
   const isLoading = false;
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   const [form, setForm] = useState<Partial<IComment>>({
