@@ -246,10 +246,12 @@ export const PostFormPage = () => {
               Cancelar
             </Link>
             <button
-              className="containerCreatePost__form-bottom-buttonCreate"
+              className={`containerCreatePost__form-bottom-buttonCreate containerCreatePost__form-bottom-${
+                params.id ? "edit" : "create"
+              } `}
               type="submit"
             >
-              {params.id ? "Guardar" : "Crear"}
+              {params.id ? "Guardar cambios" : "Crear"}
             </button>
           </div>
         </form>

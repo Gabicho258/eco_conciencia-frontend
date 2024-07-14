@@ -39,16 +39,20 @@
         &-title {
             font-size: 2rem;
             font-family: $roboto-bold;
+            width: 76%;
         }
 
         &-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-direction: row;
+            flex-wrap: wrap;
 
             &-btn-edit {
                 margin: 0 .4rem;
                 background-color: #F6C744;
+                margin: 0rem .4rem 2rem 0rem;
 
                 &:hover {
                     background-color: #dfa916;
@@ -57,7 +61,7 @@
 
             &-btn-delete {
                 background-color: #FF5353;
-                margin: 0 .4rem;
+                margin: 0rem .4rem 2rem 0rem;
 
                 &:hover {
 

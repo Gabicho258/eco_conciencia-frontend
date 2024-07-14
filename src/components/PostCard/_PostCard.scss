@@ -1,6 +1,11 @@
 .postCard {
   max-width: 205;
 
+  &:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px 4px;
+  }
+
   &__content {
     display: flex;
     flex-direction: column;
@@ -13,6 +18,11 @@
       gap: 20px;
       align-items: center;
       font-weight: 800;
+
+      p {
+        padding: 0 1rem;
+        height: 3rem;
+      }
 
       &-image {
         width: 100%;

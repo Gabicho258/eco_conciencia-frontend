@@ -8,6 +8,7 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
 import Register from "../../pages/Register/Register";
 import BasicModal from "../modal/BasicModal";
 // import { useGetUserByIdQuery } from "../../app/apis/compartiendoSabores.api";
@@ -49,14 +50,17 @@ export const NavBar = () => {
   const handleClickEditProfile = () => {
     navigate("/edit-profile");
   };
+  const handleClickAddPost = () => {
+    navigate("/add-post");
+  };
   const handleClickProfile = () => {
     navigate("/profile");
   };
   const handleClickLogout = () => {
     localStorage.clear();
     isUserAuthenticated = false;
-
-    navigate("/", { replace: true });
+    window.location.href = "/";
+    // navigate("/", { replace: true });
   };
 
   return (
@@ -124,7 +128,7 @@ export const NavBar = () => {
                     handleClickProfile();
                   }}
                 >
-                  <Avatar src={data?.photo_url} /> {data?.name}
+                  <Avatar src={data?.photo_url} /> Mi perfil
                 </MenuItem>
                 <Divider />
 
@@ -138,6 +142,17 @@ export const NavBar = () => {
                     <Settings fontSize="small" />
                   </ListItemIcon>
                   Editar perfil
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    handleClickAddPost();
+                  }}
+                >
+                  <ListItemIcon>
+                    <AddIcon fontSize="small" />
+                  </ListItemIcon>
+                  Publicar
                 </MenuItem>
                 <Divider />
                 <MenuItem
