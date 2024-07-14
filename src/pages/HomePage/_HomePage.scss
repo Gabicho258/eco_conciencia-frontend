@@ -10,7 +10,18 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    // margin-left: -90rem;
+
+    // margin-left: -90rem; 
+    &-tabs {
+      color: #606d5f;
+
+      &-tab {
+
+        &.Mui-selected {
+          color: #174614;
+        }
+      }
+    }
   }
 
   &__cards {
