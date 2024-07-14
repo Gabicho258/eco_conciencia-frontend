@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import {
   useCreateUserMutation,
   useLoginUserMutation,
@@ -9,7 +8,6 @@ import "./_Register.scss";
 export default function Register() {
   const [createUser] = useCreateUserMutation();
   const [loginUser] = useLoginUserMutation();
-  const navigate = useNavigate();
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -40,7 +38,7 @@ export default function Register() {
           token: userLoggedIn.token,
         })
       );
-      navigate("/home");
+      window.location.href = "/home";
     } catch (error) {
       alert(JSON.stringify(error));
     }
@@ -85,9 +83,6 @@ export default function Register() {
         </div>
         <button className="containerRegister__buttonForm">Siguiente</button>
       </form>
-      <p className="containerRegister__help">
-        ¿Ya tienes una cuenta? <a href="">Ingresa</a>
-      </p>
     </div>
   );
 }
