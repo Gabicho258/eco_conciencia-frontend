@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent } from "react";
+import { useEffect, useState } from "react";
 import { NavBar } from "../../components/NavBar/NavBar";
 import "./_PostFormPage.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -11,8 +11,14 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ClearIcon from "@mui/icons-material/Clear";
-import { CloudDone } from "@mui/icons-material";
 import { categories, districts } from "../../utils/constants";
+import { Button } from "@mui/material";
+import { cloudinaryService } from "../../services/cloudinaryService";
+import {
+  useCreatePostMutation,
+  useGetPostByIdQuery,
+  useUpdatePostMutation,
+} from "../../app/ecoCiencia.api";
 
 export const PostFormPage = () => {
   const {
@@ -23,44 +29,61 @@ export const PostFormPage = () => {
   } = useForm();
 
   const params = useParams();
-  const navigate = useNavigate();
+  const { data: post, isLoading } = useGetPostByIdQuery(params.id || "");
 
+  const navigate = useNavigate();
+  const userDataStorage = localStorage.getItem("user_data");
+  const userCredentials =
+    userDataStorage?.includes("_id") && JSON.parse(userDataStorage);
   const [district, setDistrict] = useState("");
   const [photosUrl, setPhotosUrl] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
+  const [createPost] = useCreatePostMutation();
+  const [updatePost] = useUpdatePostMutation();
   const handleChange = (event: SelectChangeEvent) => {
     setDistrict(event.target.value);
   };
-
-  /* post de prueba */
-  const post = {
-    title: "string",
-    description: "description",
-    photos_url: ["photo1", "photo2"],
-    labels: ["Categoría 1", "cat2"],
-    district: "Cayma",
+  // Conexion with cloudinary service
+  const showWidgetPhotoPost = async () => {
+    let state = "";
+    let URL = "";
+    // hacemos un casteo para evitar errores
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).cloudinary.openUploadWidget(
+      cloudinaryService("eco_conciencia"),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (err: any, result: any) => {
+        if (!err && result && result.event === "success") {
+          state = "success";
+          const { secure_url /*, original_filename, format */ } = result.info;
+          URL = secure_url;
+        }
+        if (state === "success" && result.event === "close") {
+          handleAddImage(URL);
+        }
+      }
+    );
   };
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      const res = {
+      const postToHandle = {
         /* falta el id del usuario */
+        user_id: userCredentials._id,
         title: values.title,
         description: values.description,
         photos_url: photosUrl,
         labels: selectedCategories,
-        district: district
+        district: district,
       };
       if (params.id) {
-        /* updatepost */
+        await updatePost({ _id: params.id, ...postToHandle }).unwrap();
+        navigate("/home", { replace: true });
       } else {
-        /* createpost */
-        /* const createdPost = await createPost(res) */
-        /* console.log(createdPost) */
+        await createPost(postToHandle).unwrap();
+        navigate("/home");
       }
-
-      navigate("/home");
+      console.log(postToHandle);
     } catch (error) {
       console.log("Error con el postMessage", error);
     }
@@ -69,24 +92,20 @@ export const PostFormPage = () => {
   useEffect(() => {
     async function loadPost() {
       if (params.id) {
-        /* llamada a la base de datos, reemplazar post por el post obtenido de la llamada */
-        setValue("title", post.title);
-        setValue("description", post.description);
-        setPhotosUrl(post.photos_url || []);
-        setSelectedCategories(post.labels || []);
+        setValue("title", post?.title);
+        setValue("description", post?.description);
+        setPhotosUrl(post?.photos_url || []);
+        setSelectedCategories(post?.labels || []);
         console.log(selectedCategories);
-        setDistrict(post.district);
+        setDistrict(post?.district || "");
       }
     }
 
     loadPost();
-  }, []);
+  }, [isLoading]);
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    const newPhotos = files.map((file) => URL.createObjectURL(file));
-
-    setPhotosUrl((prevPhotos) => [...prevPhotos, ...newPhotos]);
+  const handleAddImage = (url: string) => {
+    setPhotosUrl((prevPhotos) => [...prevPhotos, url]);
   };
 
   const handleDeleteImage = (url: string) => {
@@ -96,9 +115,9 @@ export const PostFormPage = () => {
   };
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategories(prevSelectedCategories =>
+    setSelectedCategories((prevSelectedCategories) =>
       prevSelectedCategories.includes(category)
-        ? prevSelectedCategories.filter(cat => cat !== category)
+        ? prevSelectedCategories.filter((cat) => cat !== category)
         : [...prevSelectedCategories, category]
     );
   };
@@ -131,15 +150,15 @@ export const PostFormPage = () => {
               <h4>Imágenes de mi post:</h4>
               <div className="containerCreatePost__form-inputs-images-urls">
                 {photosUrl.map((url, index) => (
-                  <div className="containerCreatePost__form-inputs-images-urls-url">
-                    <a
-                      href={url}
-                      key={index}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Imagen {index + 1}
-                    </a>
+                  <div
+                    className="containerCreatePost__form-inputs-images-urls-url"
+                    key={index}
+                  >
+                    <img
+                      className="containerCreatePost__form-inputs-images-urls-url-image"
+                      src={url}
+                      alt={`Image ${index}`}
+                    />
                     <button
                       className="containerCreatePost__form-inputs-images-urls-url-button"
                       type="button"
@@ -152,12 +171,13 @@ export const PostFormPage = () => {
               </div>
             </div>
 
-            <input
-              type="file"
+            <Button
+              variant="contained"
               className="containerCreatePost__form-inputs-image"
-              multiple
-              onChange={handleFileChange}
-            />
+              onClick={showWidgetPhotoPost}
+            >
+              Subir imagen
+            </Button>
 
             <textarea
               placeholder="Descripción de la Publicación"
@@ -178,8 +198,9 @@ export const PostFormPage = () => {
               <p className="containerCreatePost__form-inputs-categories-header">
                 Seleccione las categorías a la que pertenece su publicación:
               </p>
-              {categories.map((category) => (
+              {categories.map((category, index) => (
                 <FormControlLabel
+                  key={index}
                   control={
                     <Checkbox
                       checked={selectedCategories.includes(category)}
@@ -209,8 +230,10 @@ export const PostFormPage = () => {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                {districts.map((district) => (
-                  <MenuItem value={district}>{district}</MenuItem>
+                {districts.map((district, index) => (
+                  <MenuItem value={district} key={index}>
+                    {district}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -226,7 +249,7 @@ export const PostFormPage = () => {
               className="containerCreatePost__form-bottom-buttonCreate"
               type="submit"
             >
-              Crear
+              {params.id ? "Guardar" : "Crear"}
             </button>
           </div>
         </form>
