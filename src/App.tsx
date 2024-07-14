@@ -9,15 +9,14 @@ import HomePage from "./pages/HomePage/HomePage";
 import { Post } from "./pages/PostPage/Post";
 import { PostFormPage } from "./pages/PostFormPage/PostFormPage";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
-import { useGetUserByIdQuery } from "./app/ecoCiencia.api";
 import { Page404 } from "./pages/Page404/Page404";
 
 function App() {
   const userDataStorage = localStorage.getItem("user_data");
   const userCredentials =
     userDataStorage?.includes("_id") && JSON.parse(userDataStorage);
-  const { data } = useGetUserByIdQuery(userCredentials?._id);
-  const isUserAuthenticated = userDataStorage && !!data;
+  const isUserAuthenticated = !!userCredentials;
+
   return (
     <>
       <BrowserRouter>
@@ -31,7 +30,6 @@ function App() {
             }
           >
             <Route path="/home" element={<HomePage />} />
-
             <Route path="/profile/" element={<UserProfile />} />
             <Route path="/profile/:id" element={<UserProfile />} />
             <Route path="/edit-profile/" element={<EditProfile />} />
