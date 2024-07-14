@@ -56,7 +56,7 @@ export const NavBar = () => {
     localStorage.clear();
     isUserAuthenticated = false;
 
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   return (
